@@ -1,0 +1,95 @@
+apply plugin:  'jacoco'
+
+jacoco {
+    toolVersion = "0.8.4"
+}
+
+jacocoBadgeGenSetting {
+    jacocoReportPath  "$buildDir/reports/jacoco/testReleaseUnitTestCoverage/testReleaseUnitTestCoverage.xml"
+    readmePath "README.md"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+project.afterEvaluate {
+
+    android.applicationVariants.all { variant ->
+        def variantName = variant.name
+        def testTaskName = "test${variantName.capitalize()}UnitTest"
+
+        def excludes = [
+                '**/R.class',
+                '**/R$*.class',
+                '**/BuildConfig.*',
+                '**/Manifest*.*',
+                '**/*Test*.*',
+                'android/**/*.*',
+                '**/*_MembersInjector.class',
+                '**/Dagger*Component.class',
+                '**/Dagger*Component$Builder.class',
+                '**/*Module.class',
+                '**/*_*Factory.class',
+                '**/realm/*.*',
+                'uk/gov/hmrc/ptcalc/databinding/*.*',
+                '**/DataBinderMapperImpl*.*',
+                '**/*Activity*.*',
+                '**/*Fragment*.*'
+        ]
+        def javaClasses = fileTree(dir: variant.javaCompileProvider.get().destinationDir, excludes: excludes)
+        def kotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${variantName}", excludes: excludes)
+
+        def sourceFiles = [
+                "$project.projectDir/src/main/java",
+                "$project.projectDir/src/${variantName}/java",
+                "$project.projectDir/src/main/kotlin",
+                "$project.projectDir/src/${variantName}/kotlin"
+        ]
+
+        def executionDataFile = "${project.buildDir}/jacoco/${testTaskName}.exec"
+
+        def coverageTaskName = "${testTaskName}Coverage"
+
+        tasks.create(name: coverageTaskName, type: JacocoReport, dependsOn: "$testTaskName") {
+            group = "Reporting"
+            description = "Generate coverage report for the $variantName build."
+
+            reports {
+                html.enabled = true
+                xml.enabled = true
+            }
+
+            classDirectories.setFrom(files([javaClasses, kotlinClasses]))
+
+            sourceDirectories.setFrom(files(sourceFiles))
+
+            executionData.setFrom(files(executionDataFile))
+        }
+
+        tasks.create(name: "${testTaskName}CoverageVerification", type: JacocoCoverageVerification, dependsOn: coverageTaskName) {
+            group = "Reporting"
+            description = "Verify code coverage for the $variantName build."
+
+            violationRules {
+                rule {
+                    limit {
+                        minimum = 0.60
+                    }
+                }
+            }
+
+            classDirectories.setFrom(files([javaClasses, kotlinClasses]))
+
+            sourceDirectories.setFrom(files(sourceFiles))
+
+            executionData.setFrom(files(executionDataFile))
+        }
+    }
+}
+
+// run code coverage checks when 'check' is run
+check.dependsOn 'testReleaseUnitTestCoverageVerification'
+
+// generate code coverage report before updating badges
+generateJacocoBadge.dependsOn 'testReleaseUnitTestCoverage'
