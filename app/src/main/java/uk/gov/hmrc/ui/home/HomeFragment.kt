@@ -33,7 +33,10 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textHome.text = it
+            binding.textView.text = it
+        })
+        viewModel.buttonTitle.observe(viewLifecycleOwner, Observer {
+            binding.primaryButton.text = it
         })
         return binding.root
     }

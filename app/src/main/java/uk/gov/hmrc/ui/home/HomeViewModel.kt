@@ -10,9 +10,14 @@ import javax.inject.Inject
 class HomeViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "Hello darkness my old friend"
     }
     val text: LiveData<String> = _text
+
+    private val _buttonTitle = MutableLiveData<String>().apply {
+        value = "Primary button"
+    }
+    val buttonTitle: LiveData<String> = _buttonTitle
 }
 
 @Suppress("UNCHECKED_CAST")

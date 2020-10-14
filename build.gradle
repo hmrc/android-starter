@@ -10,6 +10,10 @@ buildscript {
         espressoVersion = '3.3.0'
         lifecycleVersion = '2.2.0'
         fragmentVersion = '1.2.5'
+        hmrcComponentsVersion = '3.4.6'
+        timberVersion = '4.7.1'
+        mockitoVersion = '3.5.13'
+        mockitoKotlinVersion = '2.2.0'
     }
     ext.kotlinVersion = "1.4.10"
     repositories {
@@ -32,6 +36,13 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://hmrc.bintray.com/mobile-releases"
+            content {
+                includeGroup("uk.gov.hmrc.gradle")
+                includeGroup("uk.gov.hmrc.components")
+            }
+        }
     }
 }
 
