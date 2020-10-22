@@ -38,6 +38,9 @@ class HomeFragment : Fragment() {
         viewModel.buttonTitle.observe(viewLifecycleOwner, Observer {
             binding.primaryButton.text = it
         })
+        binding.primaryButton.setOnClickListener {
+            viewModel.onButtonTapped()
+        }
         return binding.root
     }
 }
