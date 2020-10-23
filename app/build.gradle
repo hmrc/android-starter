@@ -62,7 +62,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.2.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.2"
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
-    debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
 
     // Material
     implementation "com.google.android.material:material:1.2.1"
@@ -132,4 +131,11 @@ dependencies {
 
     //ConditionWatcher for espresso
     androidTestImplementation 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
+
+    // Kakao for kotlin testing DSL
+    androidTestImplementation 'com.agoda.kakao:kakao:2.4.0'
+
+    // Dagger mock
+    testImplementation "com.github.fabioCollini.daggermock:daggermock:$daggerMockVersion"
+    androidTestImplementation "com.github.fabioCollini.daggermock:daggermock:$daggerMockVersion"
 }
