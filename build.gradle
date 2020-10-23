@@ -14,7 +14,6 @@ buildscript {
         timberVersion = '4.7.1'
         mockitoVersion = '3.5.13'
         mockitoKotlinVersion = '2.2.0'
-        daggerMockVersion = '0.8.5'
     }
     ext.kotlinVersion = "1.4.10"
     repositories {
@@ -42,13 +41,6 @@ allprojects {
             content {
                 includeGroup("uk.gov.hmrc.gradle")
                 includeGroup("uk.gov.hmrc.components")
-            }
-        }
-
-        maven {
-            url "https://jitpack.io"
-            content {
-                includeGroup("com.github.fabioCollini.daggermock")
             }
         }
     }

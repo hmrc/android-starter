@@ -23,11 +23,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import timber.log.Timber
+import uk.gov.hmrc.App
 import uk.gov.hmrc.MainActivity
+import uk.gov.hmrc.mocks.DaggerTestAppComponent
 import uk.gov.hmrc.mocks.MockPostService
-import uk.gov.hmrc.mocks.MockRule
+import uk.gov.hmrc.mocks.TestAppModule
 import uk.gov.hmrc.screens.TestHomeScreen
 import java.io.BufferedReader
 import java.io.IOException
@@ -37,10 +38,6 @@ import java.util.*
 
 open class BaseActivityTest() {
 
-//    @Rule
-//    @JvmField
-//    val mockRule = MockRule()
-
     private lateinit var activityScenario: ActivityScenario<out Activity>
 
     open val autoLaunchActivity = true
@@ -49,14 +46,18 @@ open class BaseActivityTest() {
         TestHomeScreen()
     }
 
-//    val postService = MockPostService()
+    val postService = MockPostService()
 
     @Before
     fun start() {
         if (autoLaunchActivity) {
             launchScenario()
         }
-//        mockRule.provides(MockPostService::class.java, postService)
+        val component = DaggerTestAppComponent.builder()
+            .appModule(TestAppModule(app, postService))
+            .build()
+        component.inject(this)
+        app.appComponent = component
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     }
 
@@ -70,6 +71,12 @@ open class BaseActivityTest() {
         } ?: run {
             activityScenario = launch(MainActivity::class.java)
         }
+    }
+
+    companion object {
+
+        private val app: App
+            get() = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as App
     }
 }
 

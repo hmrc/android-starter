@@ -19,6 +19,7 @@ open class App : Application() {
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
+        appComponent.inject(this)
     }
 
     companion object {

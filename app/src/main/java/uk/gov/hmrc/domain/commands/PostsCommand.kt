@@ -35,7 +35,9 @@ class PostsCommand @Inject constructor(
     private fun handleSuccessResponse(response: Response<List<PostDto>>): Result.Success {
         val body = response.body()
         body?.let {dto ->
-            val posts = dto.map { Post(it.id, it.userId, it.title, it.body) }
+            val posts = dto.map {
+                Post(it.id, it.userId, it.title, it.body)
+            }
             postsRepository.save(posts)
         }
         return Result.Success

@@ -135,7 +135,4 @@ dependencies {
     // Kakao for kotlin testing DSL
     androidTestImplementation 'com.agoda.kakao:kakao:2.4.0'
 
-    // Dagger mock
-    testImplementation "com.github.fabioCollini.daggermock:daggermock:$daggerMockVersion"
-    androidTestImplementation "com.github.fabioCollini.daggermock:daggermock:$daggerMockVersion"
 }

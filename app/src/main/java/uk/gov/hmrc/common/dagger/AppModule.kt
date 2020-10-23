@@ -17,7 +17,6 @@ import uk.gov.hmrc.domain.services.PostService
 import javax.inject.Named
 import javax.inject.Singleton
 import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.SSLSession
 
 @Module
 open class AppModule(private val app: Application) {
@@ -43,7 +42,7 @@ open class AppModule(private val app: Application) {
         }
         return OkHttpClient.Builder()
             .addInterceptor(timberLogger)
-            .hostnameVerifier(HostnameVerifier { hostname, session ->  true })
+            .hostnameVerifier(HostnameVerifier { hostname, session -> true })
     }
 
     @Provides
@@ -56,7 +55,7 @@ open class AppModule(private val app: Application) {
     @Provides
     @Singleton
     @Named("retrofitClient")
-    fun provideRetrofit(
+    open fun provideRetrofit(
         @Named("baseUrl") baseUrl: String,
         okHttpBuilder: OkHttpClient.Builder
     ): Retrofit {
@@ -68,8 +67,7 @@ open class AppModule(private val app: Application) {
     }
 
     @Provides
-    @Singleton
-    fun providePostService(@Named("retrofitClient") retrofit: Retrofit): PostService {
+    open fun providePostService(@Named("retrofitClient") retrofit: Retrofit): PostService {
         return retrofit.create(PostService::class.java)
     }
 }
